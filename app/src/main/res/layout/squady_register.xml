@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:stretchColumns="1">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="ca.squady.SquadyRegister">
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            layout="@layout/loginscreenlogoarea"
+            android:id="@+id/include" />
+
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="50dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/squadylogo" />
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageView"
+            android:layout_margin="16dp"
+            android:background="@color/mainColor">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:text="@string/header"
+                android:textColor="@color/textColor"
+                android:textSize="23sp"
+                android:textStyle="bold"
+                android:typeface="serif" />
+
+            <EditText
+                android:id="@+id/editText"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/textView"
+                android:layout_marginEnd="15dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/textColor"
+                android:ems="10"
+                android:hint="@string/username"
+                android:inputType="textPersonName"
+                android:paddingStart="15dp"
+                android:textColor="@color/textColor"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editText2"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_below="@+id/editText"
+                android:layout_centerHorizontal="true"
+                android:layout_marginEnd="15dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="3dp"
+                android:background="@color/textColor"
+                android:ems="10"
+                android:hint="@string/name"
+                android:inputType="textPersonName"
+                android:paddingStart="15dp"
+                android:textColor="@color/textColor"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editText3"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/editText2"
+                android:layout_marginEnd="15dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="3dp"
+                android:background="@color/textColor"
+                android:ems="10"
+                android:hint="@string/email"
+                android:inputType="textPersonName"
+                android:paddingStart="15dp"
+                android:textColor="@color/textColor"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editText4"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/editText3"
+                android:layout_marginEnd="15dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="3dp"
+                android:background="@color/textColor"
+                android:ems="10"
+                android:hint="@string/password"
+                android:inputType="textPersonName"
+                android:paddingStart="15dp"
+                android:textColor="@color/textColor"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editText5"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/editText4"
+                android:layout_marginEnd="15dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="3dp"
+                android:background="@color/textColor"
+                android:ems="10"
+                android:hint="@string/confirmpassword"
+                android:inputType="textPersonName"
+                android:paddingStart="15dp"
+                android:textColor="@color/textColor"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/editText5"
+                android:layout_marginEnd="15dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="23dp"
+                android:background="@color/colorPrimary"
+                android:text="@string/signup"
+                android:textColor="@color/textColor"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    </TableLayout>
+
+</ScrollView>

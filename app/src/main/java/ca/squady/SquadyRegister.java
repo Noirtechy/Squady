@@ -12,6 +12,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -19,6 +23,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.Map;
 
 public class SquadyRegister extends AppCompatActivity
 {
@@ -117,6 +123,9 @@ public class SquadyRegister extends AppCompatActivity
 
                     Intent intent = new Intent(SquadyRegister.this, SquadyViewProfile.class);
                     startActivity(intent);
+
+                    //String email = String.valueOf(firebaseDatabase.child(user.getEmail()).setValue(userObject));
+                    //Toast.makeText(SquadyRegister.this, email, Toast.LENGTH_SHORT).show();
                 }
                 else
                 {

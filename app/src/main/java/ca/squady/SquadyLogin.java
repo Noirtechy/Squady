@@ -1,31 +1,31 @@
 package ca.squady;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class SquadyLogin extends AppCompatActivity
 {
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        //New Changes
         super.onCreate(savedInstanceState);
         setContentView(R.layout.squady_login);
     }
 
-    public void onClick (View view)
+    public void onClick(View view)
     {
         Intent intent = new Intent(this, SquadyRegister.class);
         startActivity(intent);
     }
 
-    public void onClickLogin (View view)
+    public void onClickLogin(View view)
     {
         Intent intent = new Intent(this, SquadyViewProfile.class);
         startActivity(intent);
     }
-
 }

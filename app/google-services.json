@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "882593776349",
+    "firebase_url": "https://squady-b9d45.firebaseio.com",
+    "project_id": "squady-b9d45",
+    "storage_bucket": "squady-b9d45.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:882593776349:android:a6d105002b216540",
+        "android_client_info": {
+          "package_name": "ca.squady"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "882593776349-9lu4gjufi2vqdf8thqliefcjde5mg5uo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDkcJBhofizjLuy3qP7q3T8x11b_wDQsU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

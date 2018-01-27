@@ -9,6 +9,7 @@
     <string name="header">Create Account</string>
     <string name="username">Username</string>
     <string name="name">Name</string>
+    <string name="phoneno">Phone Number</string>
     <string name="confirmpassword">Confirm Password</string>
     <string name="signup">Sign Me Up</string>
 

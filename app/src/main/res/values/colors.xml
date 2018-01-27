@@ -7,5 +7,5 @@
     <color name="holderColor">#E0E0E0</color>
     <color name="mainColor">#FFA726</color>
     <color name="textColor">#FFFFFF</color>
-
+    <color name="darkText">#000000</color>
 </resources>

@@ -1,10 +1,22 @@
 <resources>
     <string name="app_name">Squady</string>
 
-    <!-- Login Activity Strings -->
+    <!-- Login & Register Activity Strings -->
     <string name="email">Email Address</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="registerRequest">Don\'t have an account? Click here to Sign Up.</string>
+    <string name="header">Create Account</string>
+    <string name="username">Username</string>
+    <string name="name">Name</string>
+    <string name="confirmpassword">Confirm Password</string>
+    <string name="signup">Sign Me Up</string>
+
+    <string name="viewprofileusername">JonRandy1</string>
+    <string name="viewprofilename">Jonathan Randelonia</string>
+    <string name="viewprofilelocation">St. Catherines, ON</string>
+    <string name="viewprofileemail">jonrandy@gmail.com</string>
+    <string name="viewprofilephoneno">+2348091347778</string>
+    <string name="editprofile">Edit Profile</string>
 
 </resources>

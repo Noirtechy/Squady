@@ -4,12 +4,12 @@ package ca.squady;
  * Created by Ifeoluwa David on 2018-01-27.
  */
 
-public class UserInformation
+public class User
 {
     private String username, name, email, phonenumber;
     private int userID;
 
-    public UserInformation(String username, String name, String email, String phonenumber)
+    public User(String username, String name, String email, String phonenumber)
     {
         this.username = username;
         this.name = name;

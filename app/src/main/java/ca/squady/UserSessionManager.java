@@ -31,7 +31,7 @@ public class UserSessionManager
 
     //method to let the user login
     //this method will store the user data in shared preferences
-    public void userLogin(UserInformation user)
+    public void userLogin(User user)
     {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -50,10 +50,10 @@ public class UserSessionManager
     }
 
     //this method gives the logged in user
-    public UserInformation getUser()
+    public User getUser()
     {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
-        return new UserInformation
+        return new User
         (
                 sharedPreferences.getString(KEY_USERNAME, null),
                 sharedPreferences.getString(KEY_NAME, null),

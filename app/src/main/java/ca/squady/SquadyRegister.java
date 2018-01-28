@@ -2,29 +2,24 @@ package ca.squady;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
-
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.Map;
 
 public class SquadyRegister extends AppCompatActivity
 {
@@ -42,6 +37,7 @@ public class SquadyRegister extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.squady_register);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance().getReference();
@@ -56,9 +52,6 @@ public class SquadyRegister extends AppCompatActivity
 
         buttonSignup = (Button) findViewById(R.id.buttonSignup);
         progressDialog = new ProgressDialog(this);
-
-        //attaching listener to button
-        //buttonSignup.setOnClickListener(this);
     }
 
     public void registerUser(View view)
@@ -104,6 +97,7 @@ public class SquadyRegister extends AppCompatActivity
 
         //if the email and password are not empty, display a progress dialog
         progressDialog.setMessage("Registering Please Wait...");
+        progressDialog.setCancelable(false);
         progressDialog.show();
 
         //creating a new user
@@ -116,21 +110,47 @@ public class SquadyRegister extends AppCompatActivity
                 //checking if success
                 if(task.isSuccessful())
                 {
-                    UserInformation userObject = new UserInformation(username, name, email, phonenumber);
+                    User userObject = new User(username, name, email, phonenumber);
                     FirebaseUser user = firebaseAuth.getCurrentUser();
                     firebaseDatabase.child(user.getUid()).setValue(userObject);
-                    messageAlertDialog("Successfully Registered!");
 
-                    Intent intent = new Intent(SquadyRegister.this, SquadyViewProfile.class);
-                    startActivity(intent);
+                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(SquadyRegister.this);
+                    builder.setMessage("Successfully Registered!");
+                    builder.setCancelable(false);
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener()
+                    {
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            dialog.dismiss();
+                            finish();
+                        }
+                    });
+                    android.support.v7.app.AlertDialog alert = builder.create();
+                    alert.show();
 
-                    //String email = String.valueOf(firebaseDatabase.child(user.getEmail()).setValue(userObject));
-                    //Toast.makeText(SquadyRegister.this, email, Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
-                    //display some message here
-                    Toast.makeText(SquadyRegister.this,"Registration Error",Toast.LENGTH_LONG).show();
+                    try
+                    {
+                        throw task.getException();
+                    }
+                    catch (FirebaseAuthWeakPasswordException weakPassword)
+                    {
+                       messageAlertDialog("Try entering a stronger password");
+                    }
+                    catch (FirebaseAuthInvalidCredentialsException malformedEmail)
+                    {
+                        messageAlertDialog("Your email address seems invalid. Please try something else.");
+                    }
+                    catch (FirebaseAuthUserCollisionException existEmail)
+                    {
+                        messageAlertDialog("This email address is already in use. Please try something else.");
+                    }
+                    catch (Exception e)
+                    {
+                        messageAlertDialog(e.getMessage());
+                    }
                 }
                 progressDialog.dismiss();
             }

@@ -8,63 +8,43 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
+import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-
-import java.util.Map;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class SquadyLogin extends AppCompatActivity
 {
     EditText loginEmail, loginPassword;
     private ProgressDialog progressDialog;
     private FirebaseAuth firebaseAuth;
-    private Firebase mRef;
+    DatabaseReference databaseReference;
+    String UID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.squady_login);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         firebaseAuth = FirebaseAuth.getInstance();
-        Firebase.setAndroidContext(this);
-        mRef = new Firebase("https://squady-b9d45.firebaseio.com/");
 
-        mRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Map<String, String> map = dataSnapshot.getValue(Map.class);
-                String firebasename = map.get("name");
-                String firebaseemail = map.get("email");
-                String firebasephonenumber = map.get("phonenumber");
-                String firebaseusername = map.get("username");
-
-                //i go toast am
-                Toast.makeText(SquadyLogin.this, firebasename + " " + firebaseemail+ " ", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-
-        //if the objects getcurrentuser method is not null, means user is already logged in
-        if(firebaseAuth.getCurrentUser() != null)
+        //if the current user is not null i.e. already logged in, redirect to view profile.
+        if(UserSessionManager.getInstance(this).isLoggedIn())
         {
             finish();
-            startActivity(new Intent(getApplicationContext(), SquadyViewProfile.class));
+            startActivity(new Intent(this, SquadyViewProfile.class));
         }
 
         loginEmail = (EditText) findViewById(R.id.loginEmail);
@@ -73,7 +53,8 @@ public class SquadyLogin extends AppCompatActivity
         progressDialog = new ProgressDialog(this);
     }
 
-    public void userSignup(View view){
+    public void userSignup(View view)
+    {
         Intent intent = new Intent(SquadyLogin.this, SquadyRegister.class);
         startActivity(intent);
     }
@@ -98,7 +79,7 @@ public class SquadyLogin extends AppCompatActivity
         }
 
         //if the email and password are not empty, display a progress dialog
-        progressDialog.setMessage("Logging in Please Wait...");
+        progressDialog.setMessage("Logging in...");
         progressDialog.show();
 
         //logging in the user
@@ -112,13 +93,52 @@ public class SquadyLogin extends AppCompatActivity
                 //if the task is successfull
                 if(task.isSuccessful())
                 {
-                    //start the profile activity
-                    finish();
-                    startActivity(new Intent(getApplicationContext(), SquadyViewProfile.class));
+                    FirebaseUser user = firebaseAuth.getCurrentUser();
+                    databaseReference = FirebaseDatabase.getInstance().getReference().child(user.getUid());
+                    databaseReference.addListenerForSingleValueEvent(new ValueEventListener()
+                    {
+                        @Override
+                        public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot)
+                        {
+                            String username = dataSnapshot.child("username").getValue(String.class);
+                            String name = dataSnapshot.child("name").getValue(String.class);
+                            String email = dataSnapshot.child("email").getValue(String.class);
+                            String phonenumber = dataSnapshot.child("phonenumber").getValue(String.class);
+
+                            User loggedInUser = new User(username, name, email, phonenumber);
+                            UserSessionManager.getInstance(SquadyLogin.this).userLogin(loggedInUser);
+
+                            //start the profile activity
+                            progressDialog.dismiss();
+                            finish();
+                            startActivity(new Intent(getApplicationContext(), SquadyViewProfile.class));
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError)
+                        {
+                            throw databaseError.toException();
+                        }
+                    });
                 }
                 else
                 {
-                    messageAlertDialog("Wrong Credentials. Please Try Again.");
+                    try
+                    {
+                        throw task.getException();
+                    }
+                    catch (FirebaseAuthInvalidUserException invalidEmail)
+                    {
+                        messageAlertDialog("Oops! Email and Password don't match. Please try something else.");
+                    }
+                    catch (FirebaseAuthInvalidCredentialsException wrongPassword)
+                    {
+                        messageAlertDialog("Oops! Email and Password don't match. Please try something else.");
+                    }
+                    catch (Exception e)
+                    {
+                        messageAlertDialog(e.getMessage());
+                    }
                 }
             }
         });
@@ -139,5 +159,4 @@ public class SquadyLogin extends AppCompatActivity
         android.support.v7.app.AlertDialog alert = builder.create();
         alert.show();
     }
-
 }

@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "882593776349-7giu1qcnq76orsl3sgncc21dubl2sf07.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ca.squady",
+            "certificate_hash": "551e814b4b7c0cfd86ceb246d19ac31b1c6dd39a"
+          }
+        },
+        {
           "client_id": "882593776349-9lu4gjufi2vqdf8thqliefcjde5mg5uo.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "882593776349-9lu4gjufi2vqdf8thqliefcjde5mg5uo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

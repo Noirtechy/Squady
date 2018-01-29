@@ -19,5 +19,8 @@
     <string name="viewprofileemail">jonrandy@gmail.com</string>
     <string name="viewprofilephoneno">+2348091347778</string>
     <string name="editprofile">Edit Profile</string>
+    <string name="updateProfile">Update Profile Info</string>
+    <string name="uploadProfilePhoto">Upload Profile Photo</string>
+    <string name="changePassword">Change Password</string>
 
 </resources>

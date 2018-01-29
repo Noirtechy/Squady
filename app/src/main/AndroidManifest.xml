@@ -19,7 +19,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".SquadyRegister" />
-        <activity android:name=".SquadyViewProfile"/>
+        <activity android:name=".SquadyViewProfile" />
+        <activity android:name=".SquadyEditProfile"></activity>
     </application>
 
 </manifest>

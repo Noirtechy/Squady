@@ -154,13 +154,19 @@
 
             </RelativeLayout>
 
+            <ImageView
+                android:id="@+id/profilephoto"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:src="@drawable/man" />
+
             <RelativeLayout
                 android:id="@+id/relativeLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/imageView6"
+                android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="46dp"
+                android:layout_marginTop="222dp"
                 android:background="@color/colorPrimary"
                 android:padding="16dp">
 
@@ -174,15 +180,6 @@
                     android:textStyle="normal" />
 
             </RelativeLayout>
-
-            <ImageView
-                android:id="@+id/imageView6"
-                android:layout_width="130dp"
-                android:layout_height="120dp"
-                android:layout_marginTop="55dp"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                app:srcCompat="@drawable/squadylogo" />
 
         </RelativeLayout>
 

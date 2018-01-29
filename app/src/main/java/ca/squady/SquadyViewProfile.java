@@ -30,10 +30,13 @@ public class SquadyViewProfile extends AppCompatActivity
         drawer = (DrawerLayout) findViewById(R.id.drawer);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawer, toolbar_top, R.string.open, R.string.close);
         drawer.setDrawerListener(actionBarDrawerToggle);
+    }
 
+    public void onResume()
+    {
+        super.onResume();
         final TextView profileusername = (TextView) findViewById(R.id.usernameHeader);
         final TextView profilename = (TextView) findViewById(R.id.profilename);
-        final TextView profilelocation = (TextView) findViewById(R.id.profilelocation);
         final TextView profileemail = (TextView) findViewById(R.id.profileemail);
         final TextView profilephonenumber = (TextView) findViewById(R.id.profilephonenumber);
 
@@ -54,10 +57,7 @@ public class SquadyViewProfile extends AppCompatActivity
 
     public void editProfile (View view)
     {
-        //Logout functionality temporarily in edit profile button for easy testing
-        finishAffinity();
-        UserSessionManager.getInstance(getApplicationContext()).logout();
-        Intent login = new Intent(SquadyViewProfile.this, SquadyLogin.class);
+        Intent login = new Intent(SquadyViewProfile.this, SquadyEditProfile.class);
         startActivity(login);
     }
 }

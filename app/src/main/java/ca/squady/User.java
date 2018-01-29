@@ -1,8 +1,7 @@
 package ca.squady;
 
-/**
- * Created by Ifeoluwa David on 2018-01-27.
- */
+import java.util.HashMap;
+import java.util.Map;
 
 public class User
 {
@@ -35,5 +34,15 @@ public class User
     public String getPhonenumber()
     {
         return phonenumber;
+    }
+
+    public Map<String,Object> toMap()
+    {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("username", username);
+        result.put("name", name);
+        result.put("email", email);
+        result.put("phonenumber", phonenumber);
+        return result;
     }
 }

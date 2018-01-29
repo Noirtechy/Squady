@@ -26,10 +26,9 @@ import com.google.firebase.database.ValueEventListener;
 public class SquadyLogin extends AppCompatActivity
 {
     EditText loginEmail, loginPassword;
-    private ProgressDialog progressDialog;
-    private FirebaseAuth firebaseAuth;
-    DatabaseReference databaseReference;
-    String UID;
+    ProgressDialog progressDialog;
+    FirebaseAuth firebaseAuth;
+    DatabaseReference firebaseDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -39,6 +38,7 @@ public class SquadyLogin extends AppCompatActivity
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         firebaseAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance().getReference();
 
         //if the current user is not null i.e. already logged in, redirect to view profile.
         if(UserSessionManager.getInstance(this).isLoggedIn())
@@ -66,15 +66,9 @@ public class SquadyLogin extends AppCompatActivity
         String password = loginPassword.getText().toString().trim();
 
         //checking if email and passwords are empty
-        if (TextUtils.isEmpty(email))
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password))
         {
-            Toast.makeText(this, "Please enter email", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        if (TextUtils.isEmpty(password))
-        {
-            Toast.makeText(this, "Please enter password", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Required Login Details are Incomplete", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -84,64 +78,64 @@ public class SquadyLogin extends AppCompatActivity
 
         //logging in the user
         firebaseAuth.signInWithEmailAndPassword(email, password)
-        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
-        {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task)
-            {
-                progressDialog.dismiss();
-                //if the task is successfull
-                if(task.isSuccessful())
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
                 {
-                    FirebaseUser user = firebaseAuth.getCurrentUser();
-                    databaseReference = FirebaseDatabase.getInstance().getReference().child(user.getUid());
-                    databaseReference.addListenerForSingleValueEvent(new ValueEventListener()
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task)
                     {
-                        @Override
-                        public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot)
+                        progressDialog.dismiss();
+                        //if the task is successfull
+                        if(task.isSuccessful())
                         {
-                            String username = dataSnapshot.child("username").getValue(String.class);
-                            String name = dataSnapshot.child("name").getValue(String.class);
-                            String email = dataSnapshot.child("email").getValue(String.class);
-                            String phonenumber = dataSnapshot.child("phonenumber").getValue(String.class);
+                            FirebaseUser user = firebaseAuth.getCurrentUser();
+                            firebaseDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid());
+                            firebaseDatabase.addListenerForSingleValueEvent(new ValueEventListener()
+                            {
+                                @Override
+                                public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot)
+                                {
+                                    String username = dataSnapshot.child("username").getValue(String.class);
+                                    String name = dataSnapshot.child("name").getValue(String.class);
+                                    String email = dataSnapshot.child("email").getValue(String.class);
+                                    String phonenumber = dataSnapshot.child("phonenumber").getValue(String.class);
 
-                            User loggedInUser = new User(username, name, email, phonenumber);
-                            UserSessionManager.getInstance(SquadyLogin.this).userLogin(loggedInUser);
+                                    User loggedInUser = new User(username, name, email, phonenumber);
+                                    UserSessionManager.getInstance(SquadyLogin.this).userLogin(loggedInUser);
 
-                            //start the profile activity
-                            progressDialog.dismiss();
-                            finish();
-                            startActivity(new Intent(getApplicationContext(), SquadyViewProfile.class));
+                                    //start the profile activity
+                                    progressDialog.dismiss();
+                                    finish();
+                                    startActivity(new Intent(getApplicationContext(), SquadyViewProfile.class));
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError)
+                                {
+                                    throw databaseError.toException();
+                                }
+                            });
                         }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError)
+                        else
                         {
-                            throw databaseError.toException();
+                            try
+                            {
+                                throw task.getException();
+                            }
+                            catch (FirebaseAuthInvalidUserException invalidEmail)
+                            {
+                                messageAlertDialog("Oops! Email and Password don't match. Please try something else.");
+                            }
+                            catch (FirebaseAuthInvalidCredentialsException wrongPassword)
+                            {
+                                messageAlertDialog("Oops! Email and Password don't match. Please try something else.");
+                            }
+                            catch (Exception e)
+                            {
+                                messageAlertDialog(e.getMessage());
+                            }
                         }
-                    });
-                }
-                else
-                {
-                    try
-                    {
-                        throw task.getException();
                     }
-                    catch (FirebaseAuthInvalidUserException invalidEmail)
-                    {
-                        messageAlertDialog("Oops! Email and Password don't match. Please try something else.");
-                    }
-                    catch (FirebaseAuthInvalidCredentialsException wrongPassword)
-                    {
-                        messageAlertDialog("Oops! Email and Password don't match. Please try something else.");
-                    }
-                    catch (Exception e)
-                    {
-                        messageAlertDialog(e.getMessage());
-                    }
-                }
-            }
-        });
+                });
     }
 
     public void messageAlertDialog (String message)

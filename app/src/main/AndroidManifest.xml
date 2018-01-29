@@ -20,10 +20,6 @@
         </activity>
         <activity android:name=".SquadyRegister" />
         <activity android:name=".SquadyViewProfile" />
-<<<<<<< HEAD
-        <activity android:name=".SquadyEditProfile"></activity>
-=======
->>>>>>> navigation drawer for view profile
     </application>
 
 </manifest>

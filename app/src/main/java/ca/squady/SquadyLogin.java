@@ -78,64 +78,64 @@ public class SquadyLogin extends AppCompatActivity
 
         //logging in the user
         firebaseAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
+        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task)
+            {
+                progressDialog.dismiss();
+                //if the task is successfull
+                if(task.isSuccessful())
                 {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task)
+                    FirebaseUser user = firebaseAuth.getCurrentUser();
+                    firebaseDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid());
+                    firebaseDatabase.addListenerForSingleValueEvent(new ValueEventListener()
                     {
-                        progressDialog.dismiss();
-                        //if the task is successfull
-                        if(task.isSuccessful())
+                        @Override
+                        public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot)
                         {
-                            FirebaseUser user = firebaseAuth.getCurrentUser();
-                            firebaseDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid());
-                            firebaseDatabase.addListenerForSingleValueEvent(new ValueEventListener()
-                            {
-                                @Override
-                                public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot)
-                                {
-                                    String username = dataSnapshot.child("username").getValue(String.class);
-                                    String name = dataSnapshot.child("name").getValue(String.class);
-                                    String email = dataSnapshot.child("email").getValue(String.class);
-                                    String phonenumber = dataSnapshot.child("phonenumber").getValue(String.class);
+                            String username = dataSnapshot.child("username").getValue(String.class);
+                            String name = dataSnapshot.child("name").getValue(String.class);
+                            String email = dataSnapshot.child("email").getValue(String.class);
+                            String phonenumber = dataSnapshot.child("phonenumber").getValue(String.class);
 
-                                    User loggedInUser = new User(username, name, email, phonenumber);
-                                    UserSessionManager.getInstance(SquadyLogin.this).userLogin(loggedInUser);
+                            User loggedInUser = new User(username, name, email, phonenumber);
+                            UserSessionManager.getInstance(SquadyLogin.this).userLogin(loggedInUser);
 
-                                    //start the profile activity
-                                    progressDialog.dismiss();
-                                    finish();
-                                    startActivity(new Intent(getApplicationContext(), SquadyViewProfile.class));
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError)
-                                {
-                                    throw databaseError.toException();
-                                }
-                            });
+                            //start the profile activity
+                            progressDialog.dismiss();
+                            finish();
+                            startActivity(new Intent(getApplicationContext(), SquadyViewProfile.class));
                         }
-                        else
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError)
                         {
-                            try
-                            {
-                                throw task.getException();
-                            }
-                            catch (FirebaseAuthInvalidUserException invalidEmail)
-                            {
-                                messageAlertDialog("Oops! Email and Password don't match. Please try something else.");
-                            }
-                            catch (FirebaseAuthInvalidCredentialsException wrongPassword)
-                            {
-                                messageAlertDialog("Oops! Email and Password don't match. Please try something else.");
-                            }
-                            catch (Exception e)
-                            {
-                                messageAlertDialog(e.getMessage());
-                            }
+                            throw databaseError.toException();
                         }
+                    });
+                }
+                else
+                {
+                    try
+                    {
+                        throw task.getException();
                     }
-                });
+                    catch (FirebaseAuthInvalidUserException invalidEmail)
+                    {
+                        messageAlertDialog("Oops! Email and Password don't match. Please try something else.");
+                    }
+                    catch (FirebaseAuthInvalidCredentialsException wrongPassword)
+                    {
+                        messageAlertDialog("Oops! Email and Password don't match. Please try something else.");
+                    }
+                    catch (Exception e)
+                    {
+                        messageAlertDialog(e.getMessage());
+                    }
+                }
+            }
+        });
     }
 
     public void messageAlertDialog (String message)

@@ -12,7 +12,8 @@
     <string name="phoneno">Phone Number</string>
     <string name="confirmpassword">Confirm Password</string>
     <string name="signup">Sign Me Up</string>
-
+    <string name="open">Open</string>
+    <string name="close">Close</string>
     <string name="viewprofileusername">JonRandy1</string>
     <string name="viewprofilename">Jonathan Randelonia</string>
     <string name="viewprofilelocation">St. Catherines, ON</string>

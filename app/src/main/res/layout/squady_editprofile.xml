@@ -60,7 +60,7 @@
                 android:id="@+id/profilephoto"
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
-                android:src="@drawable/man" />
+                android:src="@drawable/squadylogo" />
 
             <RelativeLayout
                 android:id="@+id/relativeLayout2"

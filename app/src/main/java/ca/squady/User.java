@@ -3,10 +3,6 @@ package ca.squady;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Ifeoluwa David on 2018-01-27.
- */
-
 public class User
 {
     private String username, name, email, phonenumber;

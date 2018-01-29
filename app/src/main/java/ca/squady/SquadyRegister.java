@@ -39,9 +39,6 @@ public class SquadyRegister extends AppCompatActivity
         setContentView(R.layout.squady_register);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseDatabase = FirebaseDatabase.getInstance().getReference();
-
         //initializing views
         registerUsername = (EditText) findViewById(R.id.registerUsername);
         registerName = (EditText) findViewById(R.id.registerName);
@@ -101,60 +98,69 @@ public class SquadyRegister extends AppCompatActivity
         progressDialog.show();
 
         //creating a new user
+        firebaseAuth = FirebaseAuth.getInstance();
         firebaseAuth.createUserWithEmailAndPassword(email, password)
-        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
-        {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task)
-            {
-                //checking if success
-                if(task.isSuccessful())
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
                 {
-                    User userObject = new User(username, name, email, phonenumber);
-                    FirebaseUser user = firebaseAuth.getCurrentUser();
-                    firebaseDatabase.child(user.getUid()).setValue(userObject);
-
-                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(SquadyRegister.this);
-                    builder.setMessage("Successfully Registered!");
-                    builder.setCancelable(false);
-                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener()
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task)
                     {
-                        public void onClick(DialogInterface dialog, int which)
+                        //checking if success
+                        if(task.isSuccessful())
                         {
-                            dialog.dismiss();
-                            finish();
+                            User userObject = new User(username, name, email, phonenumber);
+                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                            firebaseDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid());
+                            firebaseDatabase.setValue(userObject).addOnCompleteListener(new OnCompleteListener<Void>()
+                            {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task)
+                                {
+                                    if(task.isSuccessful())
+                                    {
+                                        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(SquadyRegister.this);
+                                        builder.setMessage("Successfully Registered!");
+                                        builder.setCancelable(false);
+                                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener()
+                                        {
+                                            public void onClick(DialogInterface dialog, int which)
+                                            {
+                                                dialog.dismiss();
+                                                finish();
+                                            }
+                                        });
+                                        android.support.v7.app.AlertDialog alert = builder.create();
+                                        alert.show();
+                                    }
+                                }
+                            });
                         }
-                    });
-                    android.support.v7.app.AlertDialog alert = builder.create();
-                    alert.show();
-
-                }
-                else
-                {
-                    try
-                    {
-                        throw task.getException();
+                        else
+                        {
+                            try
+                            {
+                                throw task.getException();
+                            }
+                            catch (FirebaseAuthWeakPasswordException weakPassword)
+                            {
+                                messageAlertDialog("Try entering a stronger password");
+                            }
+                            catch (FirebaseAuthInvalidCredentialsException malformedEmail)
+                            {
+                                messageAlertDialog("Your email address seems invalid. Please try something else.");
+                            }
+                            catch (FirebaseAuthUserCollisionException existEmail)
+                            {
+                                messageAlertDialog("This email address is already in use. Please try something else.");
+                            }
+                            catch (Exception e)
+                            {
+                                messageAlertDialog(e.getMessage());
+                            }
+                        }
+                        progressDialog.dismiss();
                     }
-                    catch (FirebaseAuthWeakPasswordException weakPassword)
-                    {
-                       messageAlertDialog("Try entering a stronger password");
-                    }
-                    catch (FirebaseAuthInvalidCredentialsException malformedEmail)
-                    {
-                        messageAlertDialog("Your email address seems invalid. Please try something else.");
-                    }
-                    catch (FirebaseAuthUserCollisionException existEmail)
-                    {
-                        messageAlertDialog("This email address is already in use. Please try something else.");
-                    }
-                    catch (Exception e)
-                    {
-                        messageAlertDialog(e.getMessage());
-                    }
-                }
-                progressDialog.dismiss();
-            }
-        });
+                });
     }
 
     public void messageAlertDialog (String message)

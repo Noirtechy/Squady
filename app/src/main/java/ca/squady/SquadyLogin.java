@@ -26,10 +26,9 @@ import com.google.firebase.database.ValueEventListener;
 public class SquadyLogin extends AppCompatActivity
 {
     EditText loginEmail, loginPassword;
-    private ProgressDialog progressDialog;
-    private FirebaseAuth firebaseAuth;
-    DatabaseReference databaseReference;
-    String UID;
+    ProgressDialog progressDialog;
+    FirebaseAuth firebaseAuth;
+    DatabaseReference firebaseDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -39,6 +38,7 @@ public class SquadyLogin extends AppCompatActivity
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         firebaseAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance().getReference();
 
         //if the current user is not null i.e. already logged in, redirect to view profile.
         if(UserSessionManager.getInstance(this).isLoggedIn())
@@ -66,15 +66,9 @@ public class SquadyLogin extends AppCompatActivity
         String password = loginPassword.getText().toString().trim();
 
         //checking if email and passwords are empty
-        if (TextUtils.isEmpty(email))
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password))
         {
-            Toast.makeText(this, "Please enter email", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        if (TextUtils.isEmpty(password))
-        {
-            Toast.makeText(this, "Please enter password", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Required Login Details are Incomplete", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -94,8 +88,8 @@ public class SquadyLogin extends AppCompatActivity
                 if(task.isSuccessful())
                 {
                     FirebaseUser user = firebaseAuth.getCurrentUser();
-                    databaseReference = FirebaseDatabase.getInstance().getReference().child(user.getUid());
-                    databaseReference.addListenerForSingleValueEvent(new ValueEventListener()
+                    firebaseDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid());
+                    firebaseDatabase.addListenerForSingleValueEvent(new ValueEventListener()
                     {
                         @Override
                         public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot)

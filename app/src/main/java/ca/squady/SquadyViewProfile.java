@@ -22,7 +22,10 @@ public class SquadyViewProfile extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.squady_viewprofile);
 
-        //actionBarDrawerToggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.textColor));
+        navdrawer();
+    }
+
+    public void navdrawer(){
         toolbar_top = (Toolbar) findViewById(R.id.toolbar_top);
         setSupportActionBar(toolbar_top);
         getSupportActionBar().setDisplayShowTitleEnabled(false);

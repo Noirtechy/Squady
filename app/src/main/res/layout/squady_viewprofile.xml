@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         app:menu="@menu/drawermenu"
         android:id="@+id/nv"
-        android:background="#424242"
+        android:background="@color/textColor"
         app:headerLayout="@layout/navigation_header"
         android:layout_gravity="start">
 
